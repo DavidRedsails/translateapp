@@ -118,38 +118,6 @@
             transform: translateY(-1px);
         }
 
-        /* CORS解决方案提示 */
-        .cors-help {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-        }
-
-        .cors-help h3 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
-
-        .cors-help p, .cors-help li {
-            color: #856404;
-            line-height: 1.6;
-        }
-
-        .cors-help ol {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        .cors-help code {
-            background: #f8f9fa;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-        }
-
         /* 主页面样式 */
         .main-page {
             display: none;
@@ -163,6 +131,7 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
+            position: relative;
         }
 
         .header h1 {
@@ -174,6 +143,24 @@
         .header p {
             color: #7f8c8d;
             font-size: 1.1rem;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-info::before {
+            content: "👤 ";
+            margin-right: 5px;
         }
 
         .translation-form {
@@ -387,6 +374,18 @@
             .button-row {
                 flex-direction: column;
             }
+
+            .user-info {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -396,18 +395,6 @@
         <div class="welcome-page" id="welcomePage">
             <h1>智能翻译工具</h1>
             <p>专业的AI翻译服务，提供高质量的多语言翻译体验</p>
-            
-            <div class="cors-help">
-                <h3>🔧 使用前必读</h3>
-                <p>由于浏览器安全策略，需要解决跨域问题。请选择以下任一方案：</p>
-                <ol>
-                    <li><strong>最佳方案：</strong>部署到Vercel/Netlify（完美解决CORS）</li>
-                    <li><strong>临时方案：</strong>使用Chrome启动参数：<br>
-                        <code>chrome.exe --disable-web-security --user-data-dir="C:/temp/chrome"</code></li>
-                    <li><strong>插件方案：</strong>安装CORS浏览器插件（如"CORS Unblock"）</li>
-                    <li><strong>本地测试：</strong>启用下方的"离线模拟模式"</li>
-                </ol>
-            </div>
 
             <div class="toggle-switch">
                 <span>在线模式</span>
@@ -420,21 +407,23 @@
             
             <div class="form-group">
                 <label for="apiKey">API密钥</label>
-                <input type="password" id="apiKey" placeholder="请输入您的API密钥" value="app-cMyppmYXAR3jFGYeClYnIv3G">
+                <input type="password" id="apiKey" placeholder="请输入您的API密钥">
             </div>
             
             <div class="form-group">
                 <label for="username">用户名</label>
-                <input type="text" id="username" placeholder="请输入您的用户名" value="api test user">
+                <input type="text" id="username" placeholder="请输入您的用户名">
             </div>
             
             <button class="btn-primary" onclick="initializeApp()">开始使用</button>
-            <button class="btn-secondary" onclick="showCorsHelp()">CORS解决方案</button>
         </div>
 
         <!-- 主页面 -->
         <div class="main-page" id="mainPage">
             <div class="header">
+                <div class="user-info" id="userInfo">
+                    用户名
+                </div>
                 <h1>智能翻译工具</h1>
                 <p>高质量AI翻译服务 <span id="modeIndicator"></span></p>
             </div>
@@ -444,18 +433,18 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label for="targetLanguage">目标语言</label>
-                        <input type="text" id="targetLanguage" placeholder="例如：英语、日语、法语等" value="日语">
+                        <input type="text" id="targetLanguage" placeholder="例如：英语、日语、法语等">
                     </div>
                     <div class="input-group">
                         <label for="translationTone">翻译语气</label>
-                        <input type="text" id="translationTone" placeholder="例如：商务、正式、口语等" value="商务">
+                        <input type="text" id="translationTone" placeholder="例如：商务、正式、口语等">
                     </div>
                 </div>
 
                 <!-- 第二行：原文本 -->
                 <div class="input-group">
                     <label for="originalText">原文本</label>
-                    <textarea id="originalText" class="text-area-large" placeholder="请输入或粘贴需要翻译的文本...">你好，很高兴认识你</textarea>
+                    <textarea id="originalText" class="text-area-large" placeholder="请输入或粘贴需要翻译的文本..."></textarea>
                 </div>
 
                 <!-- 第三行：操作按钮 -->
@@ -520,36 +509,15 @@
             document.getElementById('welcomePage').style.display = 'none';
             document.getElementById('mainPage').classList.add('active');
             
+            // 显示用户名在右上角
+            document.getElementById('userInfo').textContent = username || '匿名用户';
+            
             // 更新模式指示器
             const modeIndicator = document.getElementById('modeIndicator');
             modeIndicator.textContent = offlineMode ? '(离线模拟模式)' : '(在线模式)';
             modeIndicator.style.color = offlineMode ? '#e74c3c' : '#27ae60';
             
             updateStatus(offlineMode ? '离线模拟模式启动成功' : '在线模式启动成功', 'success');
-        }
-
-        // 显示CORS帮助
-        function showCorsHelp() {
-            alert(`解决CORS跨域问题的完整方案：
-
-🚀 方法1 - Vercel部署（推荐，完美解决）：
-1. 访问 vercel.com 注册账号
-2. 连接GitHub仓库并部署
-3. 创建API代理函数（见开发文档）
-4. 获得 https://your-app.vercel.app 域名
-
-⚡ 方法2 - Chrome启动参数（临时测试）：
-1. 关闭所有Chrome窗口
-2. 命令行启动：chrome.exe --disable-web-security --user-data-dir="C:/temp/chrome"
-3. 重新打开此页面
-
-🔧 方法3 - 浏览器插件：
-1. Chrome商店搜索"CORS Unblock"
-2. 安装并启用插件
-3. 刷新页面
-
-🧪 方法4 - 测试模式：
-启用"离线模拟模式"体验完整功能`);
         }
 
         // 清空原文本
@@ -764,9 +732,9 @@
                 
                 let errorMessage = '';
                 if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                    errorMessage = '网络连接失败。建议解决方案：\n1. 部署到Vercel/Netlify（推荐）\n2. 使用Chrome禁用安全参数\n3. 安装CORS浏览器插件\n4. 启用离线模拟模式测试';
+                    errorMessage = '网络连接失败，请检查网络连接后重试';
                 } else if (error.message.includes('请求超时')) {
-                    errorMessage = '请求超时（超过180秒），请检查网络连接或稍后重试';
+                    errorMessage = '请求超时，请检查网络连接或稍后重试';
                 } else {
                     errorMessage = error.message;
                 }
