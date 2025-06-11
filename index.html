@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>智能翻译工具</title>
+    
+    <!-- PWA清单文件 -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIuaZuuiDveWcsOivkX3niYMiLAogICJzaG9ydF9uYW1lIjogIuWcsOivkX3niYMiLAogICJkZXNjcmlwdGlvbiI6ICLkuJPkuJrnmoTmmaLolK3lsI/liqnmiafvvIzkv53kvpvpm5PotrHnvJbor5HkrIDmjqQiLAogICJzdGFydF91cmwiOiAiLyIsCiAgInNjb3BlIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiM2NjdlZWEiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lpSUhacFpYZENiM2c5SWpBZ01DQXhNamdnTVRJNElpQjRiV3h1Y3owaSFhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lQZ29nSUNBOFpHVm1jejROSUNBOWJHbHVaV0ZzUjNKaFpHbGxiblFnYVdROVltZFNZV1FpSUhneFBTSXdJaUI0TWowOE1qRXlKU0luSUhreE9EZ0pNb0pNSFEweVFuVXdJU0FpSUpOZzRMUm5oa2xoa0ZGSmNmNGJUZDJtRVFqTE9EX3FLOEtORmxkZlNIbzMrWDRxZ3FzOFNcQjFOaFA5bGRmU0hvMytYNHFncXM4U1xuZElOQXFTRVFqTE9EX3FLOEtObGNmNGJUZDJtRVFqTE9EX3FLOEtObGNmNGJUZDJtRVFqTE9EX3FLOEtObGNmNGJUZDJtRVFqTE9EX3FLOEtObGNmNGJUZDJtRVFqTE9EX3FLOEtObGNmNGJUZDJtUVVRMktRQUFLbzlGVjFRQU5BQUFBQUFBSUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCUlNVMllBUVVGOUFLd0NmdW1wN25RQUFBQUJKUlU1RXJrSmdnZz09IiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdkbWxsZDBKdmVEMGlNQ0F3SURNNE5DQXpPRFFpSUhodGJHNXpQU0lvYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpUGdvZ0lDQThaR1ZtY3c0TklDQTliR2x1WldGc1IzSmhaR2xsYm5RZ2FXUTlZbWRTWVdRaUlIZ3hQU0l3SWlCNE1qMGlNakV5SlNVaUlIa3hQU0l3SWlCNU1qMGlNVGs0SlNVaVBnOGdJQ0E4YzJOdmNIUWdRaTF2Y2k1TlppSXhmRFV5SWo4K1BDOWtaV1p6UGdvOG1ua1IxaGJIVmxNY0R4ekhBOGN4d1BITWNEEEJ6SEF5K21ZSzVJNUNmM3JReWZsb2hWYUNyVGlYeFpJem5EaWVPWTRIam1PQjQ1amdlT1k0SGptT0I0NWpnZU9ZNEhqbU9CNDVqZ2VPWTRIam1PQjQ1amdlT1k0SGptT0I0NWpnZU9ZNEhqbU9CNDVqZ2VPWTRIam1PQjQ1amdlT1k0SGptT0I0NWpnZU9ZNEhqbU9CNDVqZ2VPWTRIam1PQjQ1amdlT1k0SGptT0I0NWpnZU9ZNEhqbU9CNDVqZ2VPWTRIaWxtT0I0NWpnZU9ZNEhqbU9CNDV3NGRFTnhIREE4Y3h3UEhNY0R4ekhBOGN4d1BITWNEOFF2dkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUF3ckwzUTZreFE9IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    
+    <!-- iOS特定图标 -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6Izc2NGJhMjtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMzYiIGZpbGw9InVybCgjYmdHcmFkKSIvPgogIDx0ZXh0IHg9IjkwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPueUs+iDvTwvdGV4dD4KICA8dGV4dCB4PSI5MCIgeT0iMTA1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QeKGkjwvdGV4dD4KICA8dGV4dCB4PSI5MCIgeT0iMTQ1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+5oiz6K+RPC90ZXh0Pgo8L3N2Zz4=" sizes="180x180">
+    
+    <!-- iOS不同尺寸图标 -->
+    <link rel="apple-touch-icon" sizes="120x120" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6Izc2NGJhMjtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iMjQiIGZpbGw9InVybCgjYmdHcmFkKSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPueUs+iDvTwvdGV4dD4KICA8dGV4dCB4PSI2MCIgeT0iNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5B4oaSPC90ZXh0PgogIDx0ZXh0IHg9IjYwIiB5PSI5NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuaAs+isoTwvdGV4dD4KPC9zdmc+">
+    
+    <!-- iOS其他设置 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="智能翻译">
+    
+    <!-- 通用图标 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYTtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzY0YmEyO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0idXJsKCNiZ0dyYWQpIi8+CiAgPHRleHQgeD0iMTYiIHk9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7nlLPogr08L3RleHQ+CiAgPHRleHQgeD0iMTYiIHk9IjIwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5B4oaUPC90ZXh0PgogIDx0ZXh0IHg9IjE2IiB5PSIyOCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+5oiz6K+RPC90ZXh0Pgo8L3N2Zz4=">
+    
+    <!-- Windows磁贴 -->
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileImage" content="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgdmlld0JveD0iMCAwIDE0NCAxNDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnR3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6Izc2NGJhMjtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iMjQiIGZpbGw9InVybCgjYmdHcmFkKSIvPgogIDx0ZXh0IHg9IjcyIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPueUs+iDvTwvdGV4dD4KICA8dGV4dCB4PSI3MiIgeT0iODUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5B4oaUPC90ZXh0PgogIDx0ZXh0IHg9IjcyIiB5PSIxMTUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7mgLPorgEwL3RleHQ+Cjwvc3ZnPg==">
+    
+    <!-- 主题色 -->
+    <meta name="theme-color" content="#667eea">
+    
     <style>
         * {
             margin: 0;
@@ -778,8 +803,88 @@
 
         // 预填充一些默认值
         window.addEventListener('load', function() {
-            // 可以在这里添加一些初始化逻辑
+            // 注册Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker注册成功:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker注册失败:', error);
+                });
+            }
+
+            // 检测PWA安装提示
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('PWA安装提示可用');
+                
+                // 可以在这里显示自定义的安装提示
+                showInstallPrompt(deferredPrompt);
+            });
+
+            // 检测PWA已安装
+            window.addEventListener('appinstalled', (evt) => {
+                console.log('PWA已安装到主屏幕');
+                updateStatus('应用已成功添加到主屏幕！', 'success');
+            });
         });
+
+        // 显示安装提示（可选功能）
+        function showInstallPrompt(deferredPrompt) {
+            // 创建一个简单的安装提示
+            const installBanner = document.createElement('div');
+            installBanner.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-size: 14px;
+                max-width: 90%;
+                text-align: center;
+            `;
+            installBanner.innerHTML = `
+                <div style="margin-bottom: 10px;">📱 可以将此应用添加到主屏幕</div>
+                <button id="installBtn" style="background: white; color: #667eea; border: none; padding: 8px 16px; border-radius: 5px; margin-right: 10px; cursor: pointer;">安装</button>
+                <button id="dismissBtn" style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 5px; cursor: pointer;">暂不</button>
+            `;
+            
+            document.body.appendChild(installBanner);
+
+            // 安装按钮点击事件
+            document.getElementById('installBtn').addEventListener('click', () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('用户同意安装PWA');
+                    } else {
+                        console.log('用户拒绝安装PWA');
+                    }
+                    deferredPrompt = null;
+                    document.body.removeChild(installBanner);
+                });
+            });
+
+            // 关闭按钮点击事件
+            document.getElementById('dismissBtn').addEventListener('click', () => {
+                document.body.removeChild(installBanner);
+            });
+
+            // 5秒后自动消失
+            setTimeout(() => {
+                if (document.body.contains(installBanner)) {
+                    document.body.removeChild(installBanner);
+                }
+            }, 5000);
+        }
     </script>
 </body>
 </html>
