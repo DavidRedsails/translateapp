@@ -591,21 +591,33 @@
 
         // 模拟翻译
         function simulateTranslation(text, targetLanguage) {
-            // 简单的模拟逻辑
+            // 检查预设的翻译结果
             const mockResult = mockTranslations[text.trim()];
             if (mockResult) {
                 return mockResult;
             }
             
-            // 生成模拟结果
-            if (targetLanguage.includes('英')) {
-                return `Hello, this is a simulated translation of: "${text}"`;
-            } else if (targetLanguage.includes('日')) {
-                return `こんにちは、これは「${text}」のシミュレーション翻訳です`;
-            } else if (targetLanguage.includes('法')) {
-                return `Bonjour, ceci est une traduction simulée de: "${text}"`;
+            // 根据目标语言生成模拟结果
+            const language = targetLanguage.toLowerCase();
+            
+            if (language.includes('英') || language.includes('english')) {
+                return `Hello! This is a simulated English translation of: "${text}"`;
+            } else if (language.includes('日') || language.includes('japanese')) {
+                return `こんにちは！これは「${text}」の日本語シミュレーション翻訳です。`;
+            } else if (language.includes('法') || language.includes('french')) {
+                return `Bonjour! Ceci est une traduction française simulée de: "${text}"`;
+            } else if (language.includes('韩') || language.includes('korean')) {
+                return `안녕하세요! 이것은 "${text}"의 한국어 시뮬레이션 번역입니다.`;
+            } else if (language.includes('德') || language.includes('german')) {
+                return `Hallo! Dies ist eine simulierte deutsche Übersetzung von: "${text}"`;
+            } else if (language.includes('西') || language.includes('spanish')) {
+                return `¡Hola! Esta es una traducción simulada al español de: "${text}"`;
+            } else if (language.includes('俄') || language.includes('russian')) {
+                return `Привет! Это симулированный русский перевод текста: "${text}"`;
+            } else if (language.includes('意') || language.includes('italian')) {
+                return `Ciao! Questa è una traduzione italiana simulata di: "${text}"`;
             } else {
-                return `[${targetLanguage}] 模拟翻译: ${text}`;
+                return `【${targetLanguage}模拟翻译】: ${text}`;
             }
         }
 
@@ -642,8 +654,18 @@
             const translationTone = document.getElementById('translationTone').value.trim();
             const originalText = document.getElementById('originalText').value.trim();
 
-            if (!targetLanguage || !originalText) {
-                updateStatus('请填写目标语言和原文本', 'error');
+            if (!originalText) {
+                updateStatus('请输入需要翻译的原文本', 'error');
+                return;
+            }
+
+            // 离线模式下，如果没有填写目标语言，提供默认值
+            let effectiveTargetLanguage = targetLanguage;
+            if (userConfig.offlineMode && !targetLanguage) {
+                effectiveTargetLanguage = '英语';
+                updateStatus('离线模式：未指定目标语言，默认翻译为英语', 'loading');
+            } else if (!userConfig.offlineMode && !targetLanguage) {
+                updateStatus('请填写目标语言', 'error');
                 return;
             }
 
@@ -656,8 +678,8 @@
 
                 if (userConfig.offlineMode) {
                     // 离线模拟模式
-                    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-                    translatedText = simulateTranslation(originalText, targetLanguage);
+                    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1500)); // 模拟延迟
+                    translatedText = simulateTranslation(originalText, effectiveTargetLanguage);
                     
                 } else {
                     // 在线模式 - 自动检测环境
@@ -674,7 +696,7 @@
                             apiKey: userConfig.apiKey,
                             username: userConfig.username,
                             inputs: {
-                                target_language: targetLanguage,
+                                target_language: effectiveTargetLanguage,
                                 text: originalText,
                                 context: translationTone || '通用'
                             }
@@ -688,7 +710,7 @@
                         apiUrl = 'https://ai-console-pre.spendia.jp/v1/workflows/run';
                         requestBody = {
                             inputs: {
-                                target_language: targetLanguage,
+                                target_language: effectiveTargetLanguage,
                                 text: originalText,
                                 context: translationTone || '通用'
                             },
@@ -725,7 +747,9 @@
                 
                 // 自动复制到剪贴板
                 await copyToClipboard(translatedText);
-                updateStatus(userConfig.offlineMode ? '模拟翻译完成，已自动复制到剪贴板' : '翻译完成，已自动复制到剪贴板', 'success');
+                updateStatus(userConfig.offlineMode ? 
+                    `模拟翻译完成（${effectiveTargetLanguage}），已自动复制到剪贴板` : 
+                    '翻译完成，已自动复制到剪贴板', 'success');
 
             } catch (error) {
                 console.error('翻译错误:', error);
