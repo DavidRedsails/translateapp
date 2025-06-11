@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>智能翻译工具</title>
     
     <!-- PWA清单文件 -->
@@ -18,6 +18,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="智能翻译">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- 防止用户缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"">
     
     <!-- 通用图标 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdHcmFkIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYTtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzY0YmEyO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0idXJsKCNiZ0dyYWQpIi8+CiAgPHRleHQgeD0iMTYiIHk9IjEyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7nlLPogr08L3RleHQ+CiAgPHRleHQgeD0iMTYiIHk9IjIwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5B4oaUPC90ZXh0PgogIDx0ZXh0IHg9IjE2IiB5PSIyOCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+5oiz6K+RPC90ZXh0Pgo8L3N2Zz4=">
@@ -803,6 +808,38 @@
 
         // 预填充一些默认值
         window.addEventListener('load', function() {
+            // 检测PWA模式
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true;
+            
+            // iOS PWA特殊处理
+            if (isPWA && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                console.log('运行在iOS PWA模式');
+                document.body.classList.add('ios-pwa-mode');
+                
+                // 防止双击缩放
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+                
+                // 防止橡皮筋效果
+                document.addEventListener('touchmove', function(event) {
+                    if (event.scale !== 1) {
+                        event.preventDefault();
+                    }
+                }, { passive: false });
+                
+                // 隐藏Safari地址栏（如果仍然显示）
+                setTimeout(() => {
+                    window.scrollTo(0, 1);
+                }, 100);
+            }
+
             // 注册Service Worker
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/service-worker.js')
@@ -821,16 +858,74 @@
                 deferredPrompt = e;
                 console.log('PWA安装提示可用');
                 
-                // 可以在这里显示自定义的安装提示
-                showInstallPrompt(deferredPrompt);
+                // 只在非PWA模式下显示安装提示
+                if (!isPWA) {
+                    showInstallPrompt(deferredPrompt);
+                }
             });
 
             // 检测PWA已安装
             window.addEventListener('appinstalled', (evt) => {
                 console.log('PWA已安装到主屏幕');
-                updateStatus('应用已成功添加到主屏幕！', 'success');
+                updateStatus('应用已成功添加到主屏幕！请从主屏幕打开以获得最佳体验', 'success');
             });
+
+            // 如果在浏览器中打开，提示用户添加到主屏幕
+            if (!isPWA && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    showAddToHomeScreenTip();
+                }, 3000);
+            }
         });
+
+        // 显示添加到主屏幕提示
+        function showAddToHomeScreenTip() {
+            const tipBanner = document.createElement('div');
+            tipBanner.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-size: 14px;
+                max-width: 90%;
+                text-align: center;
+                z-index: 1000;
+                animation: slideUp 0.3s ease;
+            `;
+            tipBanner.innerHTML = `
+                <div style="margin-bottom: 8px;">📱 获得更好体验</div>
+                <div style="font-size: 12px; opacity: 0.9;">点击分享按钮 → 添加到主屏幕</div>
+                <button onclick="this.parentNode.remove()" style="position: absolute; top: 5px; right: 8px; background: none; border: none; color: white; font-size: 16px;">×</button>
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideUp {
+                    from { transform: translateX(-50%) translateY(100%); opacity: 0; }
+                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(tipBanner);
+
+            // 8秒后自动消失
+            setTimeout(() => {
+                if (document.body.contains(tipBanner)) {
+                    tipBanner.style.animation = 'slideUp 0.3s ease reverse';
+                    setTimeout(() => {
+                        if (document.body.contains(tipBanner)) {
+                            document.body.removeChild(tipBanner);
+                        }
+                    }, 300);
+                }
+            }, 8000);
+        }
 
         // 显示安装提示（可选功能）
         function showInstallPrompt(deferredPrompt) {
