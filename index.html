@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能翻译工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px;
+        }
+
+        /* 封面页面样式 */
+        .welcome-page {
+            padding: 60px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .welcome-page h1 {
+            color: #2c3e50;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .welcome-page p {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin-right: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-1px);
+        }
+
+        /* CORS解决方案提示 */
+        .cors-help {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .cors-help h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .cors-help p, .cors-help li {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .cors-help ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .cors-help code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 主页面样式 */
+        .main-page {
+            display: none;
+            padding: 40px;
+        }
+
+        .main-page.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .translation-form {
+            display: grid;
+            gap: 25px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .input-group input, .input-group textarea {
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .text-area-large {
+            min-height: 200px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .btn-translate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-translate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-translate:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-copy {
+            background: #27ae60;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-copy:hover {
+            background: #229954;
+            transform: translateY(-1px);
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-top: 20px;
+        }
+
+        .status-bar.success {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .status-bar.error {
+            border-left-color: #e74c3c;
+            background: #fdeaea;
+        }
+
+        .status-bar.loading {
+            border-left-color: #f39c12;
+            background: #fef9e7;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .welcome-page, .main-page {
+                padding: 30px 20px;
+            }
+            
+            .button-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 封面页面 -->
+        <div class="welcome-page" id="welcomePage">
+            <h1>智能翻译工具</h1>
+            <p>专业的AI翻译服务，提供高质量的多语言翻译体验</p>
+            
+            <div class="cors-help">
+                <h3>🔧 使用前必读</h3>
+                <p>由于浏览器安全策略，需要解决跨域问题。请选择以下任一方案：</p>
+                <ol>
+                    <li><strong>最佳方案：</strong>部署到Vercel/Netlify（完美解决CORS）</li>
+                    <li><strong>临时方案：</strong>使用Chrome启动参数：<br>
+                        <code>chrome.exe --disable-web-security --user-data-dir="C:/temp/chrome"</code></li>
+                    <li><strong>插件方案：</strong>安装CORS浏览器插件（如"CORS Unblock"）</li>
+                    <li><strong>本地测试：</strong>启用下方的"离线模拟模式"</li>
+                </ol>
+            </div>
+
+            <div class="toggle-switch">
+                <span>在线模式</span>
+                <label class="switch">
+                    <input type="checkbox" id="offlineMode">
+                    <span class="slider"></span>
+                </label>
+                <span>离线模拟模式</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="apiKey">API密钥</label>
+                <input type="password" id="apiKey" placeholder="请输入您的API密钥" value="app-cMyppmYXAR3jFGYeClYnIv3G">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" placeholder="请输入您的用户名" value="api test user">
+            </div>
+            
+            <button class="btn-primary" onclick="initializeApp()">开始使用</button>
+            <button class="btn-secondary" onclick="showCorsHelp()">CORS解决方案</button>
+        </div>
+
+        <!-- 主页面 -->
+        <div class="main-page" id="mainPage">
+            <div class="header">
+                <h1>智能翻译工具</h1>
+                <p>高质量AI翻译服务 <span id="modeIndicator"></span></p>
+            </div>
+
+            <div class="translation-form">
+                <!-- 第一行：目标语言和翻译语气 -->
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="targetLanguage">目标语言</label>
+                        <input type="text" id="targetLanguage" placeholder="例如：英语、日语、法语等" value="日语">
+                    </div>
+                    <div class="input-group">
+                        <label for="translationTone">翻译语气</label>
+                        <input type="text" id="translationTone" placeholder="例如：商务、正式、口语等" value="商务">
+                    </div>
+                </div>
+
+                <!-- 第二行：原文本 -->
+                <div class="input-group">
+                    <label for="originalText">原文本</label>
+                    <textarea id="originalText" class="text-area-large" placeholder="请输入或粘贴需要翻译的文本...">你好，很高兴认识你</textarea>
+                </div>
+
+                <!-- 第三行：操作按钮 -->
+                <div class="button-row">
+                    <button class="btn btn-clear" onclick="clearText()">清空内容</button>
+                    <button class="btn btn-translate" id="translateBtn" onclick="translateText()">翻译</button>
+                </div>
+
+                <!-- 第四行：翻译结果 -->
+                <div class="input-group">
+                    <label for="translatedText">翻译结果</label>
+                    <textarea id="translatedText" class="text-area-large" readonly placeholder="翻译结果将显示在这里..."></textarea>
+                </div>
+
+                <!-- 第五行：复制按钮 -->
+                <div class="input-group">
+                    <button class="btn btn-copy" onclick="copyResult()">复制翻译结果</button>
+                </div>
+
+                <!-- 第六行：状态栏 -->
+                <div class="status-bar" id="statusBar">
+                    <span id="statusText">就绪</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let userConfig = {
+            apiKey: '',
+            username: '',
+            offlineMode: false
+        };
+
+        // 模拟翻译结果
+        const mockTranslations = {
+            "你好": "こんにちは",
+            "你好，很高兴认识你": "こんにちは、お会いできて嬉しいです",
+            "谢谢": "ありがとうございます",
+            "再见": "さようなら",
+            "今天天气很好": "今日はとても良い天気ですね",
+            "我爱学习": "私は勉強が大好きです"
+        };
+
+        // 初始化应用
+        function initializeApp() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const offlineMode = document.getElementById('offlineMode').checked;
+
+            if (!offlineMode && (!apiKey || !username)) {
+                alert('请填写完整的API密钥和用户名，或启用离线模拟模式');
+                return;
+            }
+
+            userConfig.apiKey = apiKey;
+            userConfig.username = username;
+            userConfig.offlineMode = offlineMode;
+
+            // 切换到主页面
+            document.getElementById('welcomePage').style.display = 'none';
+            document.getElementById('mainPage').classList.add('active');
+            
+            // 更新模式指示器
+            const modeIndicator = document.getElementById('modeIndicator');
+            modeIndicator.textContent = offlineMode ? '(离线模拟模式)' : '(在线模式)';
+            modeIndicator.style.color = offlineMode ? '#e74c3c' : '#27ae60';
+            
+            updateStatus(offlineMode ? '离线模拟模式启动成功' : '在线模式启动成功', 'success');
+        }
+
+        // 显示CORS帮助
+        function showCorsHelp() {
+            alert(`解决CORS跨域问题的完整方案：
+
+🚀 方法1 - Vercel部署（推荐，完美解决）：
+1. 访问 vercel.com 注册账号
+2. 连接GitHub仓库并部署
+3. 创建API代理函数（见开发文档）
+4. 获得 https://your-app.vercel.app 域名
+
+⚡ 方法2 - Chrome启动参数（临时测试）：
+1. 关闭所有Chrome窗口
+2. 命令行启动：chrome.exe --disable-web-security --user-data-dir="C:/temp/chrome"
+3. 重新打开此页面
+
+🔧 方法3 - 浏览器插件：
+1. Chrome商店搜索"CORS Unblock"
+2. 安装并启用插件
+3. 刷新页面
+
+🧪 方法4 - 测试模式：
+启用"离线模拟模式"体验完整功能`);
+        }
+
+        // 清空原文本
+        function clearText() {
+            document.getElementById('originalText').value = '';
+            document.getElementById('translatedText').value = '';
+            updateStatus('内容已清空', 'success');
+        }
+
+        // 更新状态栏
+        function updateStatus(message, type = 'info') {
+            const statusBar = document.getElementById('statusBar');
+            const statusText = document.getElementById('statusText');
+            
+            statusBar.className = 'status-bar';
+            if (type !== 'info') {
+                statusBar.classList.add(type);
+            }
+            
+            if (type === 'loading') {
+                statusText.innerHTML = `<span class="loading-spinner"></span>${message}`;
+            } else {
+                statusText.textContent = message;
+            }
+        }
+
+        // 复制到剪贴板
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                return success;
+            }
+        }
+
+        // 复制翻译结果
+        async function copyResult() {
+            const translatedText = document.getElementById('translatedText').value;
+            if (!translatedText.trim()) {
+                updateStatus('没有可复制的内容', 'error');
+                return;
+            }
+
+            const success = await copyToClipboard(translatedText);
+            if (success) {
+                updateStatus('翻译结果已复制到剪贴板', 'success');
+            } else {
+                updateStatus('复制失败，请手动复制', 'error');
+            }
+        }
+
+        // 处理粘贴事件，去除格式
+        document.getElementById('originalText').addEventListener('paste', function(e) {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            const cleanText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            this.value = cleanText;
+        });
+
+        // 去除<think>标签内容
+        function removeThinkTags(text) {
+            return text.replace(/<think>.*?<\/think>/gs, '').trim();
+        }
+
+        // 模拟翻译
+        function simulateTranslation(text, targetLanguage) {
+            // 简单的模拟逻辑
+            const mockResult = mockTranslations[text.trim()];
+            if (mockResult) {
+                return mockResult;
+            }
+            
+            // 生成模拟结果
+            if (targetLanguage.includes('英')) {
+                return `Hello, this is a simulated translation of: "${text}"`;
+            } else if (targetLanguage.includes('日')) {
+                return `こんにちは、これは「${text}」のシミュレーション翻訳です`;
+            } else if (targetLanguage.includes('法')) {
+                return `Bonjour, ceci est une traduction simulée de: "${text}"`;
+            } else {
+                return `[${targetLanguage}] 模拟翻译: ${text}`;
+            }
+        }
+
+        // 带超时的fetch函数
+        function fetchWithTimeout(url, options, timeout = 180000) {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('请求超时')), timeout)
+                )
+            ]);
+        }
+
+        // 重试函数
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    return await fetchWithTimeout(url, options);
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    
+                    if (error.message.includes('Failed to fetch') || error.message.includes('请求超时')) {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                        continue;
+                    }
+                    throw error;
+                }
+            }
+        }
+
+        // 翻译文本
+        async function translateText() {
+            const targetLanguage = document.getElementById('targetLanguage').value.trim();
+            const translationTone = document.getElementById('translationTone').value.trim();
+            const originalText = document.getElementById('originalText').value.trim();
+
+            if (!targetLanguage || !originalText) {
+                updateStatus('请填写目标语言和原文本', 'error');
+                return;
+            }
+
+            const translateBtn = document.getElementById('translateBtn');
+            translateBtn.disabled = true;
+            updateStatus('正在翻译，请稍候...', 'loading');
+
+            try {
+                let translatedText;
+
+                if (userConfig.offlineMode) {
+                    // 离线模拟模式
+                    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+                    translatedText = simulateTranslation(originalText, targetLanguage);
+                    
+                } else {
+                    // 在线模式 - 自动检测环境
+                    const isVercelDeployment = window.location.hostname.includes('vercel.app') || 
+                                             window.location.hostname.includes('netlify.app') ||
+                                             window.location.pathname.includes('/api/');
+                    
+                    let apiUrl, requestBody, headers;
+                    
+                    if (isVercelDeployment) {
+                        // Vercel/Netlify部署环境 - 使用代理API
+                        apiUrl = '/api/translate';
+                        requestBody = {
+                            apiKey: userConfig.apiKey,
+                            username: userConfig.username,
+                            inputs: {
+                                target_language: targetLanguage,
+                                text: originalText,
+                                context: translationTone || '通用'
+                            }
+                        };
+                        headers = {
+                            'Content-Type': 'application/json'
+                        };
+                        updateStatus('通过代理服务器翻译中...', 'loading');
+                    } else {
+                        // 直接访问API（需要解决CORS）
+                        apiUrl = 'https://ai-console-pre.spendia.jp/v1/workflows/run';
+                        requestBody = {
+                            inputs: {
+                                target_language: targetLanguage,
+                                text: originalText,
+                                context: translationTone || '通用'
+                            },
+                            response_mode: 'blocking',
+                            user: userConfig.username
+                        };
+                        headers = {
+                            'Authorization': `Bearer ${userConfig.apiKey}`,
+                            'Content-Type': 'application/json'
+                        };
+                        updateStatus('直接连接API翻译中...', 'loading');
+                    }
+
+                    const response = await fetchWithRetry(apiUrl, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.data && result.data.status === 'succeeded' && result.data.outputs && result.data.outputs.text) {
+                        translatedText = removeThinkTags(result.data.outputs.text);
+                    } else {
+                        throw new Error(result.data?.error || result.error || '翻译失败，返回数据格式异常');
+                    }
+                }
+
+                document.getElementById('translatedText').value = translatedText;
+                
+                // 自动复制到剪贴板
+                await copyToClipboard(translatedText);
+                updateStatus(userConfig.offlineMode ? '模拟翻译完成，已自动复制到剪贴板' : '翻译完成，已自动复制到剪贴板', 'success');
+
+            } catch (error) {
+                console.error('翻译错误:', error);
+                
+                let errorMessage = '';
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    errorMessage = '网络连接失败。建议解决方案：\n1. 部署到Vercel/Netlify（推荐）\n2. 使用Chrome禁用安全参数\n3. 安装CORS浏览器插件\n4. 启用离线模拟模式测试';
+                } else if (error.message.includes('请求超时')) {
+                    errorMessage = '请求超时（超过180秒），请检查网络连接或稍后重试';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                updateStatus(`翻译失败: ${errorMessage}`, 'error');
+            } finally {
+                translateBtn.disabled = false;
+            }
+        }
+
+        // 回车键快捷翻译
+        document.getElementById('originalText').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                translateText();
+            }
+        });
+
+        // 预填充一些默认值
+        window.addEventListener('load', function() {
+            // 可以在这里添加一些初始化逻辑
+        });
+    </script>
+</body>
+</html>
